@@ -276,7 +276,7 @@ Node listnodes(Tree tp, int tlab, int flab) {
 			assert(generic(x->op) == INDIR);
 			reset();
 			l = listnodes(lvalue(x), 0, 0);
-			if (fieldsize(f) < 8*f->type->size) {
+			if (fieldsize(f) < TARGET_CHAR_BIT*f->type->size) {
 				unsigned int fmask = fieldmask(f);
 				unsigned int  mask = fmask<<fieldright(f);
 				Tree q = tp->kids[1];
@@ -358,7 +358,7 @@ Node listnodes(Tree tp, int tlab, int flab) {
 		      	q = shtree(RSH,
 		      		shtree(LSH, q, cnsttree(inttype, n)),
 		      		cnsttree(inttype, n + fieldright(tp->u.field)));
-		      } else if (fieldsize(tp->u.field) < 8*tp->u.field->type->size)
+		      } else if (fieldsize(tp->u.field) < TARGET_CHAR_BIT*tp->u.field->type->size)
 		      	q = bittree(BAND,
 		      		shtree(RSH, q, cnsttree(inttype, (long)fieldright(tp->u.field))),
 		      		cnsttree(unsignedtype, (unsigned long)fieldmask(tp->u.field)));

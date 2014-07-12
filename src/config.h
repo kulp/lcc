@@ -102,3 +102,5 @@ extern unsigned         emitbin(Node, int);
 #else
 #define debug(x) (void)(dflag&&((x),0))
 #endif
+
+#define TARGET_CHAR_BIT 8 // XXX change to 32 for tenyr, and validate
