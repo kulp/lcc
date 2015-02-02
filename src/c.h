@@ -49,7 +49,7 @@
 #define isunion(t)    (unqual(t)->op == UNION)
 #define isfunc(t)     (unqual(t)->op == FUNCTION)
 #define isptr(t)      (unqual(t)->op == POINTER)
-#define ischar(t)     ((t)->size == 1 && isint(t))
+#define ischar(t)     ((t)->size == 1 && isint(t) && !(TENYR+0)/* XXX tenyr hack */)
 #define isint(t)      (unqual(t)->op == INT \
                     || unqual(t)->op == UNSIGNED)
 #define isfloat(t)    (unqual(t)->op == FLOAT)
