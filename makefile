@@ -15,6 +15,9 @@ CUSTOM=custom.mk
 include $(CUSTOM)
 B=$(BUILDDIR)/
 T=$(TSTDIR)/
+LCCDIR=$(BUILDDIR)
+CFLAGS+='-DLCCDIR="$(LCCDIR)/"'
+CFLAGS+=-Wno-logical-op-parentheses -Wno-dangling-else -Wno-parentheses
 
 what:
 	-@echo make all rcc lburg cpp lcc bprint liblcc triple clean clobber
