@@ -230,16 +230,15 @@ rhs: ADDP1(acon,reg)        "%1  +  %0"
 rhs: SUBP1(reg,acon)        "%0  -  %1" 0 /* not sure this will work */
 rhs: SUBP1(acon,reg)        "%0  -  %1" 0 /* not sure this will work */
 
-rmem: INDIRI1(rhs)          "[%0]"
-rmem: INDIRU1(rhs)          "[%0]"
-rmem: INDIRP1(rhs)          "[%0]"
+reg: INDIRI1(rhs)           "%c <- [%0]\n"
+reg: INDIRU1(rhs)           "%c <- [%0]\n"
+reg: INDIRP1(rhs)           "%c <- [%0]\n"
 
 rc12: reg                   "%0"
 rc12: con12                 "%0"
 rc24: rc12                  "%0"
 rc24: con24                 "%0"
 
-reg: rmem                   "%c <- %0\n"  1
 reg: rhs                    "%c <- %0\n"  1
 reg: LOADI1(reg)            "# move\n"  move(a)
 reg: LOADU1(reg)            "# move\n"  move(a)
