@@ -248,10 +248,10 @@ reg: BCOMI1(rc12)           "%c <- ~%0\n"
 reg: BCOMU1(rc12)           "%c <- ~%0\n"
 reg: NEGI1(rc12)            "%c <- -%0\n"
 
-reg: DIVU1(reg,reg)         "XXX %0 DIVU1 %1\n"
-reg: MODU1(reg,reg)         "XXX %0 MODU1 %1\n"
-reg: DIVI1(reg,reg)         "XXX %0 DIVI1 %1\n"
-reg: MODI1(reg,reg)         "XXX %0 MODI1 %1\n"
+reg: DIVU1(reg,reg)         "# div/mod \n"
+reg: MODU1(reg,reg)         "# div/mod \n"
+reg: DIVI1(reg,reg)         "# div/mod \n"
+reg: MODI1(reg,reg)         "# div/mod \n"
 reg: CVPU1(reg)             "# convert\n"  move(a)
 reg: CVUP1(reg)             "# convert\n"  move(a)
 reg: CVII1(reg)             "# convert\n"  move(a)
@@ -351,6 +351,8 @@ static void progend(void) {
 static void target(Node p) {
     assert(p);
     switch (generic(p->op)) {
+        case DIV:
+        case MOD:
         case CALL:
             setreg(p, intreg[REG_B]);
             break;
@@ -358,7 +360,7 @@ static void target(Node p) {
             rtarget(p, 0, intreg[REG_B]);
             break;
         default:
-            ; // XXX MUL, DIV, MOD, ASGN+B, ARG+B
+            ; // XXX ASGN+B, ARG+B
     }
 }
 
@@ -375,6 +377,17 @@ static void emit2(Node p) {
             assert(opsize(p->op) <= opsize(p->x.kids[0]->op));
             if (dst != src)
                 print("%s <- %s\n", dst, src);
+            break;
+        }
+        case DIV:
+        case MOD: {
+            const char *op = generic(p->op) == DIV ? "div" : "mod";
+            const char type = optype(p->op) == I ? 'i' : 'u';
+            char *dst = intreg[getregnum(p)]->x.name;
+            char *src = preg(intreg);
+            print("%s -> [O + 1]\n", src);
+            print("%s -> [O + 2]\n", dst);
+            print("[O] <- P + 1; P <- (@_%c%s - (. + 1)) + P\n", type, op);
             break;
         }
         case ARG:
