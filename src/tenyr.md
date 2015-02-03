@@ -301,6 +301,14 @@ reg:  CALLU1(reg)           "[O] <- P + 2; P <- %0\n"
 reg:  CALLP1(reg)           "[O] <- P + 2; P <- %0\n"
 stmt: CALLV(reg)            "[O] <- P + 2; P <- %0\n"
 
+stmt: CALLI1(acon)          "[O] <- P + 2; P <- %0\n"
+stmt: CALLU1(acon)          "[O] <- P + 2; P <- %0\n"
+stmt: CALLP1(acon)          "[O] <- P + 2; P <- %0\n"
+
+stmt: CALLI1(reg)           "[O] <- P + 2; P <- %0\n"
+stmt: CALLU1(reg)           "[O] <- P + 2; P <- %0\n"
+stmt: CALLP1(reg)           "[O] <- P + 2; P <- %0\n"
+
 stmt: RETI1(reg)            "# ret\n"
 stmt: RETU1(reg)            "# ret\n"
 stmt: RETP1(reg)            "# ret\n"
