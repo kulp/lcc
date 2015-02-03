@@ -243,7 +243,6 @@ reg: rhs                    "%c <- %0\n"  1
 reg: LOADI1(reg)            "# move\n"  move(a)
 reg: LOADU1(reg)            "# move\n"  move(a)
 reg: LOADP1(reg)            "# move\n"  move(a)
-reg: rhs                    "%c <- %0\n"
 
 reg: BCOMI1(rc12)           "%c <- ~%0\n"
 reg: BCOMU1(rc12)           "%c <- ~%0\n"
