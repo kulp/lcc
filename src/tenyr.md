@@ -351,14 +351,14 @@ static void progend(void) {
 static void target(Node p) {
     assert(p);
     switch (generic(p->op)) {
-    case CALL:
-        setreg(p, intreg[REG_B]);
-        break;
-    case RET:
-        rtarget(p, 0, intreg[REG_B]);
-        break;
-    default:
-        ; // XXX MUL, DIV, MOD, ASGN+B, ARG+B
+        case CALL:
+            setreg(p, intreg[REG_B]);
+            break;
+        case RET:
+            rtarget(p, 0, intreg[REG_B]);
+            break;
+        default:
+            ; // XXX MUL, DIV, MOD, ASGN+B, ARG+B
     }
 }
 
@@ -366,19 +366,21 @@ static void clobber(Node p) {}
 
 static void emit2(Node p) {
 #define preg(f) ((f)[getregnum(p->x.kids[0])]->x.name)
-
-    if (generic(p->op) == CVI ||
-        generic(p->op) == CVU ||
-        generic(p->op) == LOAD)
-    {
-        char *dst = intreg[getregnum(p)]->x.name;
-        char *src = preg(intreg);
-        assert(opsize(p->op) <= opsize(p->x.kids[0]->op));
-        if (dst != src)
-            print("%s <- %s\n", dst, src);
-    } else if (generic(p->op) == ARG) {
-        // leave space for return address
-        print("%s -> [O + %d]\n", preg(intreg), p->syms[2]->u.c.v.i - 1);
+    switch (generic(p->op)) {
+        case CVI:
+        case CVU:
+        case LOAD: {
+            char *dst = intreg[getregnum(p)]->x.name;
+            char *src = preg(intreg);
+            assert(opsize(p->op) <= opsize(p->x.kids[0]->op));
+            if (dst != src)
+                print("%s <- %s\n", dst, src);
+            break;
+        }
+        case ARG:
+            // leave space for return address
+            print("%s -> [O + %d]\n", preg(intreg), p->syms[2]->u.c.v.i - 1);
+            break;
     }
 }
 
