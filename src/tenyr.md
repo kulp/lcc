@@ -289,23 +289,23 @@ stmt: GTU1(reg,rc12)        "N <- %0 >  %1; P <- (@%a - (. + 1)) &  N + P\n"
 stmt: LEU1(reg,rc12)        "N <- %0 <= %1; P <- (@%a - (. + 1)) &  N + P\n"
 stmt: LTU1(reg,rc12)        "N <- %0 <  %1; P <- (@%a - (. + 1)) &  N + P\n"
 
-reg:  CALLI1(acon)          "[O] <- P + 1; P <- %0\n"
-reg:  CALLU1(acon)          "[O] <- P + 1; P <- %0\n"
-reg:  CALLP1(acon)          "[O] <- P + 1; P <- %0\n"
-stmt: CALLV(acon)           "[O] <- P + 1; P <- %0\n"
+reg:  CALLI1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
+reg:  CALLU1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
+reg:  CALLP1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
+stmt: CALLV(acon)           "[O] <- P + 1; P <- %0 // call %0\n"
 
-reg:  CALLI1(rhs)           "[O] <- P + 1; P <- %0\n"
-reg:  CALLU1(rhs)           "[O] <- P + 1; P <- %0\n"
-reg:  CALLP1(rhs)           "[O] <- P + 1; P <- %0\n"
-stmt: CALLV(rhs)            "[O] <- P + 1; P <- %0\n"
+reg:  CALLI1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
+reg:  CALLU1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
+reg:  CALLP1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
+stmt: CALLV(rhs)            "[O] <- P + 1; P <- %0 // call %0\n"
 
-stmt: CALLI1(acon)          "[O] <- P + 1; P <- %0\n"
-stmt: CALLU1(acon)          "[O] <- P + 1; P <- %0\n"
-stmt: CALLP1(acon)          "[O] <- P + 1; P <- %0\n"
+stmt: CALLI1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
+stmt: CALLU1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
+stmt: CALLP1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
 
-stmt: CALLI1(rhs)           "[O] <- P + 1; P <- %0\n"
-stmt: CALLU1(rhs)           "[O] <- P + 1; P <- %0\n"
-stmt: CALLP1(rhs)           "[O] <- P + 1; P <- %0\n"
+stmt: CALLI1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
+stmt: CALLU1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
+stmt: CALLP1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
 
 stmt: RETI1(reg)            "# ret\n"
 stmt: RETU1(reg)            "# ret\n"
@@ -385,14 +385,15 @@ static void emit2(Node p) {
             const char type = optype(p->op) == I ? 'i' : 'u';
             char *dst = intreg[getregnum(p)]->x.name;
             char *src = preg(intreg);
-            print("%s -> [O + 1]\n", src);
-            print("%s -> [O + 2]\n", dst);
+            print("%s -> [O + 1] // arg 0\n", src);
+            print("%s -> [O + 2] // arg 1\n", dst);
             print("[O] <- P + 1; P <- (@_%c%s - (. + 1)) + P\n", type, op);
             break;
         }
         case ARG:
             // leave space for return address
-            print("%s -> [O + %d]\n", preg(intreg), p->syms[2]->u.c.v.i - 1);
+            print("%s -> [O + %d] // arg %d\n",
+                  preg(intreg), p->syms[2]->u.c.v.i - 1, p->x.argno);
             break;
     }
 }
@@ -440,11 +441,11 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int n) {
     gencode(caller, callee);
     framesize = maxoffset;
 
-    print("M <- O\n");
+    print("M <- O   // frame create\n");
     print("O <- O - %d\n", framesize + 1); // account for return address
     emitcode();
-    print("O <- M\n");
-    print("P <- [O]\n\n");
+    print("O <- M   // frame destroy\n");
+    print("P <- [O] // return\n\n");
 }
 
 static void defsymbol(Symbol p) {
