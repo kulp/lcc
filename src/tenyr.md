@@ -333,7 +333,15 @@ static Symbol rmap(int opk) {
     return intregw;
 }
 
-static void segment(int n) {}
+static void segment(int n) {
+    static const char segnames[][5] = {
+        [CODE] = "code",
+        [DATA] = "data",
+        [BSS]  = "BSS",
+        [LIT]  = "lit",
+    };
+    print("/* segment : %s */\n", segnames[n]);
+}
 
 static void progend(void) {
     /* make the last instruction labelable but zero-sized */
@@ -470,7 +478,9 @@ static void export(Symbol p) {
     print(".global %s\n", p->x.name);
 }
 
-static void import(Symbol p) {}
+static void import(Symbol p) {
+    print("/* imports %s */\n", p->x.name);
+}
 
 static void global(Symbol p) {
     print("%s:\n", p->x.name);
