@@ -227,8 +227,8 @@ rhs: ADDRLP1                "%a + O"
 
 rhs: ADDP1(reg,acon)        "%0  +  %1"
 rhs: ADDP1(acon,reg)        "%1  +  %0"
-rhs: SUBP1(reg,acon)        "%0  -  %1" 0 /* not sure this will work */
-rhs: SUBP1(acon,reg)        "%0  -  %1" 0 /* not sure this will work */
+rhs: ADDP1(reg,rc12)        "%0  +  %1"
+rhs: SUBP1(reg,reg)         "%0  -  %1"
 
 reg: INDIRI1(rhs)           "%c <- [%0]\n"
 reg: INDIRU1(rhs)           "%c <- [%0]\n"
