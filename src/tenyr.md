@@ -293,10 +293,10 @@ stmt: LTI1(reg,rc12)        "N <- %0 <  %1; P <- (@%a - (. + 1)) &  N + P\n"
 stmt: EQU1(reg,rc12)        "N <- %0 == %1; P <- (@%a - (. + 1)) &  N + P\n"
 stmt: NEU1(reg,rc12)        "N <- %0 == %1; P <- (@%a - (. + 1)) &~ N + P\n"
 
-stmt: GEU1(reg,rc12)        "N <- %0 >= %1; P <- (@%a - (. + 1)) &  N + P\n"
-stmt: GTU1(reg,rc12)        "N <- %0 >  %1; P <- (@%a - (. + 1)) &  N + P\n"
-stmt: LEU1(reg,rc12)        "N <- %0 <= %1; P <- (@%a - (. + 1)) &  N + P\n"
-stmt: LTU1(reg,rc12)        "N <- %0 <  %1; P <- (@%a - (. + 1)) &  N + P\n"
+stmt: GEU1(reg,rc12)        "N <- %0 >= %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n" 0 /* XXX askreg() instead of spilling manually */
+stmt: GTU1(reg,rc12)        "N <- %0 >  %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n"
+stmt: LEU1(reg,rc12)        "N <- %0 <= %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n"
+stmt: LTU1(reg,rc12)        "N <- %0 <  %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n"
 
 reg:  CALLI1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
 reg:  CALLU1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
