@@ -191,6 +191,9 @@ con12: CNSTU1               "%a" range(a,     0, 2047)
 con12: CNSTP1               "%a" range(a, -2048, 2047)
 con5:  CNSTI1               "%a" range(a, 0, 31)
 con24: CNSTI1               "%a" range(a, -(1 << 23), (1 << 23) - 1)
+con32: CNSTI1               "%c <- (%a  >> 12); %c <- %c ^^ (%a & 0xfff)\n" 2
+con32: CNSTU1               "%c <- (%a >>> 12); %c <- %c ^^ (%a & 0xfff)\n" 2
+reg: con32                  "%0"
 
 rhs: ADDI1(reg,rc12)        "%0  +  %1"
 rhs: ADDI1(rc12,reg)        "%0  +  %1"
