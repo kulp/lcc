@@ -189,7 +189,6 @@ acon: ADDRGP1               "(@%a - (. + 1)) + P"
 con12: CNSTI1               "%a" range(a, -2048, 2047)
 con12: CNSTU1               "%a" range(a,     0, 2047)
 con12: CNSTP1               "%a" range(a, -2048, 2047)
-con5:  CNSTI1               "%a" range(a, 0, 31)
 con24: CNSTI1               "%a" range(a, -(1 << 23), (1 << 23) - 1)
 con32: CNSTI1               "%c <- (%a  >> 12); %c <- %c ^^ (%a & 0xfff)\n" 2
 con32: CNSTU1               "%c <- (%a >>> 12); %c <- %c ^^ (%a & 0xfff)\n" 2
@@ -207,9 +206,9 @@ rhs: BANDI1(reg,rc12)       "%0  &  %1"
 rhs: BANDI1(rc12,reg)       "%0  &  %1"
 rhs: BXORI1(reg,rc12)       "%0  ^  %1"
 rhs: BXORI1(rc12,reg)       "%0  ^  %1"
-rhs: LSHI1(reg,con5)        "%0  << %1"
+rhs: LSHI1(reg,rc12)        "%0  << %1"
 rhs: LSHI1(rc12,reg)        "%0  << %1"
-rhs: RSHI1(reg,con5)        "%0  >> %1"
+rhs: RSHI1(reg,rc12)        "%0  >> %1"
 rhs: RSHI1(rc12,reg)        "%0  >> %1"
 
 rhs: ADDU1(reg,rc12)        "%0  +  %1"
@@ -224,9 +223,9 @@ rhs: BANDU1(reg,rc12)       "%0  &  %1"
 rhs: BANDU1(rc12,reg)       "%0  &  %1"
 rhs: BXORU1(reg,rc12)       "%0  ^  %1"
 rhs: BXORU1(rc12,reg)       "%0  ^  %1"
-rhs: LSHU1(reg,con5)        "%0 <<< %1"
+rhs: LSHU1(reg,rc12)        "%0 <<< %1"
 rhs: LSHU1(rc12,reg)        "%0 <<< %1"
-rhs: RSHU1(reg,con5)        "%0 >>> %1"
+rhs: RSHU1(reg,rc12)        "%0 >>> %1"
 rhs: RSHU1(rc12,reg)        "%0 >>> %1"
 
 rhs: acon                   "%0"
