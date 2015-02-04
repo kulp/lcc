@@ -298,19 +298,10 @@ stmt: GTU1(reg,rc12)        "N <- %0 >  %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >
 stmt: LEU1(reg,rc12)        "N <- %0 <= %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n"
 stmt: LTU1(reg,rc12)        "N <- %0 <  %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n"
 
-reg:  CALLI1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
-reg:  CALLU1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
-reg:  CALLP1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
-stmt: CALLV(acon)           "[O] <- P + 1; P <- %0 // call %0\n"
-
 reg:  CALLI1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
 reg:  CALLU1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
 reg:  CALLP1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
 stmt: CALLV(rhs)            "[O] <- P + 1; P <- %0 // call %0\n"
-
-stmt: CALLI1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
-stmt: CALLU1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
-stmt: CALLP1(acon)          "[O] <- P + 1; P <- %0 // call %0\n"
 
 stmt: CALLI1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
 stmt: CALLU1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
