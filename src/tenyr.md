@@ -325,11 +325,9 @@ static void progbeg(int argc, char *argv[]) {
 
 #define REG_bit(x) (1<<REG_##x)
 #define REG_or_bit(x) | REG_bit(x)
-    tmask[IREG] = 0 REGS(REG_or_bit);
-    tmask[IREG] &= ~REG_bit(A) & ~REG_bit(M) & ~REG_bit(N) & \
-                   ~REG_bit(O) & ~REG_bit(P);
-    // TODO set this to tmask when we have spilling / callee-save
-    vmask[IREG] = 0;
+    vmask[IREG] = tmask[IREG] =
+        (0 REGS(REG_or_bit)) &
+        ~(REG_bit(A) | REG_bit(M) | REG_bit(N) | REG_bit(O) | REG_bit(P));
 }
 
 static Symbol rmap(int opk) {
