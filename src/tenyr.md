@@ -194,6 +194,10 @@ con32: CNSTI1               "%c <- (%a  >> 12); %c <- %c ^^ (%a & 0xfff)\n" 2
 con32: CNSTU1               "%c <- (%a >>> 12); %c <- %c ^^ (%a & 0xfff)\n" 2
 reg: con32                  "%0"
 
+reg: CNSTI1                 "# reg\n" range(a, 0, 0)
+reg: CNSTU1                 "# reg\n" range(a, 0, 0)
+reg: CNSTP1                 "# reg\n" range(a, 0, 0)
+
 rhs: ADDI1(reg,rc12)        "%0  +  %1"
 rhs: ADDI1(rc12,reg)        "%0  +  %1"
 rhs: SUBI1(reg,rc12)        "%0  -  %1"
@@ -357,6 +361,12 @@ static void target(Node p) {
             break;
         case RET:
             rtarget(p, 0, intreg[REG_B]);
+            break;
+        case CNST:
+            if (range(p, 0, 0) == 0) {
+                setreg(p, intreg[REG_A]);
+                p->x.registered = 1;
+            }
             break;
         default:
             ; // XXX ASGN+B, ARG+B
