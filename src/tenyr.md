@@ -242,9 +242,9 @@ rhs: ADDP1(acon,reg)        "%1  +  %0"
 rhs: ADDP1(reg,rc12)        "%0  +  %1"
 rhs: SUBP1(reg,reg)         "%0  -  %1"
 
-reg: INDIRI1(rhs)           "%c <- [%0]\n"
-reg: INDIRU1(rhs)           "%c <- [%0]\n"
-reg: INDIRP1(rhs)           "%c <- [%0]\n"
+reg: INDIRI1(rhs)           "%c <- [%0]\n" 1
+reg: INDIRU1(rhs)           "%c <- [%0]\n" 1
+reg: INDIRP1(rhs)           "%c <- [%0]\n" 1
 
 rc12: reg                   "%0"
 rc12: con12                 "%0"
@@ -256,14 +256,14 @@ reg: LOADI1(reg)            "# move\n"  move(a)
 reg: LOADU1(reg)            "# move\n"  move(a)
 reg: LOADP1(reg)            "# move\n"  move(a)
 
-reg: BCOMI1(rc12)           "%c <- ~%0\n"
-reg: BCOMU1(rc12)           "%c <- ~%0\n"
-reg: NEGI1(rc12)            "%c <- -%0\n"
+reg: BCOMI1(rc12)           "%c <- ~%0\n" 1
+reg: BCOMU1(rc12)           "%c <- ~%0\n" 1
+reg: NEGI1(rc12)            "%c <- -%0\n" 1
 
-reg: DIVU1(reg,reg)         "# div/mod \n"
-reg: MODU1(reg,reg)         "# div/mod \n"
-reg: DIVI1(reg,reg)         "# div/mod \n"
-reg: MODI1(reg,reg)         "# div/mod \n"
+reg: DIVU1(reg,reg)         "# div/mod \n" 5
+reg: MODU1(reg,reg)         "# div/mod \n" 5
+reg: DIVI1(reg,reg)         "# div/mod \n" 5
+reg: MODI1(reg,reg)         "# div/mod \n" 5
 reg: CVPU1(reg)             "# convert\n"  move(a)
 reg: CVUP1(reg)             "# convert\n"  move(a)
 reg: CVII1(reg)             "# convert\n"  move(a)
@@ -271,44 +271,44 @@ reg: CVIU1(reg)             "# convert\n"  move(a)
 reg: CVUI1(reg)             "# convert\n"  move(a)
 reg: CVUU1(reg)             "# convert\n"  move(a)
 
-stmt: ASGNI1(rhs,reg)       "%1 -> [%0]\n"
-stmt: ASGNU1(rhs,reg)       "%1 -> [%0]\n"
-stmt: ASGNP1(rhs,reg)       "%1 -> [%0]\n"
-stmt: ASGNI1(reg,rhs)       "[%0] <- %1\n"
-stmt: ASGNU1(reg,rhs)       "[%0] <- %1\n"
-stmt: ASGNP1(reg,rhs)       "[%0] <- %1\n"
+stmt: ASGNI1(rhs,reg)       "%1 -> [%0]\n" 2
+stmt: ASGNU1(rhs,reg)       "%1 -> [%0]\n" 2
+stmt: ASGNP1(rhs,reg)       "%1 -> [%0]\n" 2
+stmt: ASGNI1(reg,rhs)       "[%0] <- %1\n" 2
+stmt: ASGNU1(reg,rhs)       "[%0] <- %1\n" 2
+stmt: ASGNP1(reg,rhs)       "[%0] <- %1\n" 2
 
 stmt: ARGI1(reg)            "# arg\n"
 stmt: ARGU1(reg)            "# arg\n"
 stmt: ARGP1(reg)            "# arg\n"
 
-stmt: JUMPV(acon)           "P <- %0\n"
+stmt: JUMPV(acon)           "P <- %0\n" 1
 stmt: LABELV                "%a:\n"
 
-stmt: EQI1(reg,rc12)        "N <- %0 == %1; P <- (@%a - (. + 1)) &  N + P\n"
-stmt: NEI1(reg,rc12)        "N <- %0 == %1; P <- (@%a - (. + 1)) &~ N + P\n"
+stmt: EQI1(reg,rc12)        "N <- %0 == %1; P <- (@%a - (. + 1)) &  N + P\n" 2
+stmt: NEI1(reg,rc12)        "N <- %0 == %1; P <- (@%a - (. + 1)) &~ N + P\n" 2
 
-stmt: GEI1(reg,rc12)        "N <- %0 >= %1; P <- (@%a - (. + 1)) &  N + P\n"
-stmt: GTI1(reg,rc12)        "N <- %0 >  %1; P <- (@%a - (. + 1)) &  N + P\n"
-stmt: LEI1(reg,rc12)        "N <- %0 <= %1; P <- (@%a - (. + 1)) &  N + P\n"
-stmt: LTI1(reg,rc12)        "N <- %0 <  %1; P <- (@%a - (. + 1)) &  N + P\n"
+stmt: GEI1(reg,rc12)        "N <- %0 >= %1; P <- (@%a - (. + 1)) &  N + P\n" 2
+stmt: GTI1(reg,rc12)        "N <- %0 >  %1; P <- (@%a - (. + 1)) &  N + P\n" 2
+stmt: LEI1(reg,rc12)        "N <- %0 <= %1; P <- (@%a - (. + 1)) &  N + P\n" 2
+stmt: LTI1(reg,rc12)        "N <- %0 <  %1; P <- (@%a - (. + 1)) &  N + P\n" 2
 
-stmt: EQU1(reg,rc12)        "N <- %0 == %1; P <- (@%a - (. + 1)) &  N + P\n"
-stmt: NEU1(reg,rc12)        "N <- %0 == %1; P <- (@%a - (. + 1)) &~ N + P\n"
+stmt: EQU1(reg,rc12)        "N <- %0 == %1; P <- (@%a - (. + 1)) &  N + P\n" 2
+stmt: NEU1(reg,rc12)        "N <- %0 == %1; P <- (@%a - (. + 1)) &~ N + P\n" 2
 
-stmt: GEU1(reg,rc12)        "N <- %0 >= %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n" 0 /* XXX askreg() instead of spilling manually */
-stmt: GTU1(reg,rc12)        "N <- %0 >  %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n"
-stmt: LEU1(reg,rc12)        "N <- %0 <= %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n"
-stmt: LTU1(reg,rc12)        "N <- %0 <  %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n"
+stmt: GEU1(reg,rc12)        "N <- %0 >= %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n" 7 /* XXX askreg() instead of spilling manually */
+stmt: GTU1(reg,rc12)        "N <- %0 >  %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n" 7
+stmt: LEU1(reg,rc12)        "N <- %0 <= %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n" 7
+stmt: LTU1(reg,rc12)        "N <- %0 <  %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n" 7
 
-reg:  CALLI1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
-reg:  CALLU1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
-reg:  CALLP1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
-stmt: CALLV(rhs)            "[O] <- P + 1; P <- %0 // call %0\n"
+reg:  CALLI1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n" 2
+reg:  CALLU1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n" 2
+reg:  CALLP1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n" 2
+stmt: CALLV(rhs)            "[O] <- P + 1; P <- %0 // call %0\n" 2
 
-stmt: CALLI1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
-stmt: CALLU1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
-stmt: CALLP1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n"
+stmt: CALLI1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n" 2
+stmt: CALLU1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n" 2
+stmt: CALLP1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n" 2
 
 stmt: RETI1(reg)            "# ret\n"
 stmt: RETU1(reg)            "# ret\n"
