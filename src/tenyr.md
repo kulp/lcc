@@ -432,7 +432,8 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int n) {
 
     print("%s:\n", f->x.name);
     usedmask[0] = usedmask[1] = 0;
-    freemask[0] = freemask[1] = ~0U;
+    freemask[0] = vmask[IREG];
+    freemask[1] = 0;
     offset = 1;
     for (i = 0; callee[i]; i++) {
         Symbol p = callee[i];
