@@ -184,8 +184,6 @@ stmt: ASGNI1(VREGP,reg)     "# write register\n"
 stmt: ASGNP1(VREGP,reg)     "# write register\n"
 stmt: ASGNU1(VREGP,reg)     "# write register\n"
 
-acon: ADDRGP1               "(@%a - (. + 1)) + P"
-
 con12: CNSTI1               "%a" range(a, -2048, 2047)
 con12: CNSTU1               "%a" range(a,     0, 2047)
 con12: CNSTP1               "%a" range(a, -2048, 2047)
@@ -231,6 +229,8 @@ rhs: LSHU1(reg,rc12)        "%0 <<< %1"
 rhs: LSHU1(rc12,reg)        "%0 <<< %1"
 rhs: RSHU1(reg,rc12)        "%0 >>> %1"
 rhs: RSHU1(rc12,reg)        "%0 >>> %1"
+
+acon: ADDRGP1               "# addr"
 
 rhs: acon                   "%0"
 rhs: rc24                   "%0"
@@ -402,6 +402,15 @@ static void emit2(Node p) {
             print("%s -> [O + %d] // arg %d\n",
                   preg(intreg), p->syms[2]->u.c.v.i - 1, p->x.argno);
             break;
+        case ADDRG: {
+            const char *name = p->syms[0]->x.name;
+            // TODO mend this ugly hack for prepending '@' to bare labels
+            if (name[0] == '(') // this means address() already got to us
+                print("%s", name);
+            else
+                print("@%s + P", name);
+            break;
+        }
     }
 }
 
@@ -471,11 +480,9 @@ static void defsymbol(Symbol p) {
         p->x.name = p->name;
 }
 static void address(Symbol q, Symbol p, long n) {
-    if (p->scope == GLOBAL
-    || p->sclass == STATIC || p->sclass == EXTERN)
-        q->x.name = stringf("%s%s%D",
-            p->x.name, n >= 0 ? "+" : "", n);
-    else {
+    if (p->scope == GLOBAL || p->sclass == STATIC || p->sclass == EXTERN) {
+        q->x.name = stringf("(@%s - (. + (1 + %D)))", p->x.name, n);
+    } else {
         assert(n <= INT_MAX && n >= INT_MIN);
         q->x.offset = p->x.offset + n;
         q->x.name = stringd(q->x.offset);
