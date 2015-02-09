@@ -326,6 +326,11 @@ static void progbeg(int argc, char *argv[]) {
 #define REG_or_bit(x) | REG_bit(x)
     vmask[IREG] = tmask[IREG] =
         (0 REGS(REG_or_bit)) &
+        // A is special 0
+        // M is frame pointer
+        // N is condition register and temporary
+        // O is stack pointer
+        // P is program counter
         ~(REG_bit(A) | REG_bit(M) | REG_bit(N) | REG_bit(O) | REG_bit(P));
 }
 
