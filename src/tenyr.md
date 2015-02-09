@@ -281,7 +281,7 @@ stmt: ARGI1(reg)            "# arg\n"
 stmt: ARGU1(reg)            "# arg\n"
 stmt: ARGP1(reg)            "# arg\n"
 
-stmt: JUMPV(acon)           "P <- %0\n" 1
+stmt: JUMPV(rhs)            "P <- %0\n" 1
 stmt: LABELV                "%a:\n"
 
 stmt: EQI1(reg,rc12)        "N <- %0 == %1; P <- (@%a - (. + 1)) &  N + P\n" 2
