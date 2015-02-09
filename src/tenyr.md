@@ -67,7 +67,6 @@ static Symbol intregw;
 %term CNSTP1=1047
 %term CNSTU1=1046
  
-%term ARGB=41
 %term ARGI1=1061
 %term ARGP1=1063
 %term ARGU1=1062
@@ -94,7 +93,6 @@ static Symbol intregw;
 
 %term NEGI1=1221
 
-%term CALLB=217
 %term CALLI1=1237
 %term CALLP1=1239
 %term CALLU1=1238
@@ -271,6 +269,7 @@ reg: CVIU1(reg)             "# convert\n"  move(a)
 reg: CVUI1(reg)             "# convert\n"  move(a)
 reg: CVUU1(reg)             "# convert\n"  move(a)
 
+stmt: ASGNB(reg,INDIRB(reg))"# copy struct through %0 from %1 \n"
 stmt: ASGNI1(rhs,reg)       "%1 -> [%0]\n" 2
 stmt: ASGNU1(rhs,reg)       "%1 -> [%0]\n" 2
 stmt: ASGNP1(rhs,reg)       "%1 -> [%0]\n" 2
@@ -411,6 +410,14 @@ static void emit2(Node p) {
                 print("@%s + P", name);
             break;
         }
+        case ASGN:
+            if (optype(p->op) == B) {
+                print("M -> [O]\n");
+                int tmpregs[] = { REG_N, REG_M, REG_A/* unused */ };
+                blkcopy(getregnum(p->kids[0]), 0, getregnum(p->kids[1]->kids[0]), 0, p->syms[0]->u.c.v.i, tmpregs);
+                print("M <- [O]\n");
+            }
+            break;
     }
 }
 
@@ -422,10 +429,36 @@ static void doarg(Node p) {
     p->syms[2] = intconst(mkactual(1, -p->syms[0]->u.c.v.i));
 }
 
-static void blkfetch(int k, int off, int reg, int tmp) {}
-static void blkstore(int k, int off, int reg, int tmp) {}
+static void blkfetch(int k, int off, int reg, int tmp) {
+    if (k != 1) abort(); // TODO k != 1
+    print("%s <- [%s + %d]\n", intreg[tmp]->name, intreg[reg]->name, off);
+}
+
+static void blkstore(int k, int off, int reg, int tmp) {
+    if (k != 1) abort(); // TODO k != 1
+    print("%s -> [%s + %d]\n", intreg[tmp]->name, intreg[reg]->name, off);
+}
+
 static void blkloop(int dreg, int doff, int sreg, int soff,
-    int size, int tmps[]) {}
+    int size, int tmps[]) {
+    int lab = genlabel(1);
+    const char *sname = intreg[sreg]->name,
+               *dname = intreg[dreg]->name;
+    const char *names[] = {
+        intreg[tmps[0]]->name,
+        intreg[tmps[1]]->name,
+        intreg[tmps[2]]->name
+    };
+    print("%s <- %s + %d\n", names[1], dname, size);
+    print("L%d:\n", lab);
+    // TODO unroll by two
+    blkfetch(1, soff + 0, sreg, tmps[0]);
+    blkstore(1, doff + 0, dreg, tmps[0]);
+    print("%s <- %s + 1\n", sname, sname);
+    print("%s <- %s + 1\n", dname, dname);
+    print("%s <- %s < %s\n", names[0], dname, names[1]);
+    print("P <- (@L%d - (. + 1)) & %s + P\n", lab, names[0]);
+}
 
 static void local(Symbol p) {
     if (askregvar(p, (*IR->x.rmap)(ttob(p->type))) == 0) {
