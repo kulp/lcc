@@ -248,7 +248,7 @@ Type initializer(Type ty, int lev) {
 	}
 	if (isarray(ty))
 		aty = unqual(ty->type);
-	if (isarray(ty) && ischar(aty)) {
+	if (isarray(ty) && aty->size == 1 && isint(aty)) {
 		if (t == SCON) {
 			if (ty->size > 0 && ty->size == tsym->type->size - 1)
 				tsym->type = array(chartype, ty->size, 0);
