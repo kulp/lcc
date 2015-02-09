@@ -296,10 +296,10 @@ stmt: LTI1(reg,rc12)        "N <- %0 <  %1; P <- (@%a - (. + 1)) &  N + P\n" 2
 stmt: EQU1(reg,rc12)        "N <- %0 == %1; P <- (@%a - (. + 1)) &  N + P\n" 2
 stmt: NEU1(reg,rc12)        "N <- %0 == %1; P <- (@%a - (. + 1)) &~ N + P\n" 2
 
-stmt: GEU1(reg,rc12)        "N <- %0 >= %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n" 7 /* XXX askreg() instead of spilling manually */
-stmt: GTU1(reg,rc12)        "N <- %0 >  %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n" 7
-stmt: LEU1(reg,rc12)        "N <- %0 <= %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n" 7
-stmt: LTU1(reg,rc12)        "N <- %0 <  %1; M -> [O - 1]; M <- %0 ^ %1; M <- M >> 31; N <- N ^ M; M <- [O - 1]; P <- (@%a - (. + 1)) &  N + P\n" 7
+stmt: GEU1(reg,reg)         "N <- %0 >= %1; N <- %0 @ 31 + N; N <- %1 @ 31 + N; N <- N @ 0; P <- (@%a - (. + 1)) &  N + P\n" 5
+stmt: GTU1(reg,reg)         "N <- %0 >  %1; N <- %0 @ 31 + N; N <- %1 @ 31 + N; N <- N @ 0; P <- (@%a - (. + 1)) &  N + P\n" 5
+stmt: LEU1(reg,reg)         "N <- %0 <= %1; N <- %0 @ 31 + N; N <- %1 @ 31 + N; N <- N @ 0; P <- (@%a - (. + 1)) &  N + P\n" 5
+stmt: LTU1(reg,reg)         "N <- %0 <  %1; N <- %0 @ 31 + N; N <- %1 @ 31 + N; N <- N @ 0; P <- (@%a - (. + 1)) &  N + P\n" 5
 
 reg:  CALLI1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n" 2
 reg:  CALLU1(rhs)           "[O] <- P + 1; P <- %0 // call %0\n" 2
