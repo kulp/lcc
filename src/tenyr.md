@@ -409,10 +409,7 @@ static void emit2(Node p) {
         case ADDRG: {
             const char *name = p->syms[0]->x.name;
             // TODO mend this ugly hack for prepending '@' to bare labels
-            if (name[0] == '(') // this means address() already got to us
-                print("%s", name);
-            else
-                print("@%s + P", name);
+            print((name[0] == '(' ? "%s" : "(@%s - (. + 1)) + P"), name);
             break;
         }
         case ASGN:
