@@ -185,7 +185,7 @@ stmt: ASGNU1(VREGP,reg)     "# write register\n"
 con12: CNSTI1               "%a" range(a, -2048, 2047)
 con12: CNSTU1               "%a" range(a,     0, 2047)
 con12: CNSTP1               "%a" range(a, -2048, 2047)
-con24: CNSTI1               "%a" range(a, -(1 << 23), (1 << 23) - 1)
+con20: CNSTI1               "%a" range(a, -(1 << 19), (1 << 19) - 1)
 con32: CNSTI1               "%c <- (%a  >> 12); %c <- %c ^^ (%a & 0xfff)\n" 2
 con32: CNSTU1               "%c <- (%a >>> 12); %c <- %c ^^ (%a & 0xfff)\n" 2
 reg: con32                  "%0"
@@ -231,13 +231,13 @@ rhs: RSHU1(rc12,reg)        "%0 >>> %1"
 acon: ADDRGP1               "# addr"
 
 rhs: acon                   "%0"
-rhs: rc24                   "%0"
+rhs: rc20                   "%0"
 rhs: ADDRFP1                "M - %a"
 rhs: ADDRLP1                "%a + O"
 
 rhs: ADDP1(reg,acon)        "%0  +  %1"
 rhs: ADDP1(acon,reg)        "%1  +  %0"
-rhs: ADDP1(reg,rc12)        "%0  +  %1"
+rhs: ADDP1(reg,rc20)        "%0  +  %1"
 rhs: SUBP1(reg,reg)         "%0  -  %1"
 
 reg: INDIRI1(rhs)           "%c <- [%0]\n" 1
@@ -246,8 +246,8 @@ reg: INDIRP1(rhs)           "%c <- [%0]\n" 1
 
 rc12: reg                   "%0"
 rc12: con12                 "%0"
-rc24: rc12                  "%0"
-rc24: con24                 "%0"
+rc20: rc12                  "%0"
+rc20: con20                 "%0"
 
 reg: rhs                    "%c <- %0\n"  1
 reg: LOADI1(reg)            "# move\n"  move(a)
